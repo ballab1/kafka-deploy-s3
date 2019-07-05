@@ -2,7 +2,8 @@ version: '3.3'
 
 services:
     broker:
-        command: kafka broker
+#        command: kafka broker
+        command: confluent broker
         container_name: broker
         depends_on:
             - zookeeper
@@ -10,12 +11,13 @@ services:
             DEBUG_TRACE: ${DEBUG_TRACE:-0}
             KAFKA_ADVERTISED_HOST_NAME: ${HOST_IP:?}
             KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://${HOST_IP:?}:9092
+            KAFKA_BOOTSTRAP_SERVERS: $KAFKA_BOOTSTRAP_SERVERS
             KAFKA_BROKER_ID: ${KAFKA_ID:?}
             KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
             KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
             KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
             KAFKA_NUM_PARTITIONS: 1
-            KAFKA_ZOOKEEPER_CONNECT: ${ZOOKEEPER_HOSTS:?}
+            KAFKA_ZOOKEEPER_CONNECT: $ZOOKEEPER_HOSTS
             ZOOKEEPER_TIMEOUT: 6000
         extra_hosts:
             - "ubuntu-s1:10.1.3.11"
@@ -23,7 +25,8 @@ services:
             - "ubuntu-s3:10.1.3.6"
             - "ubuntu-s4:10.1.3.10"
         hostname: broker
-        image: ${DOCKER_REGISTRY:-ubuntu-s2:5000/}${CONTAINER_OS:-alpine}/kafka/${KAFKA_VERSION:-2.2.0}:${CONTAINER_TAG:-e2b6659a704d81d2974b0a6b16f53529fcd12311425904f5f80c64cda8f763de}
+#        image: ${DOCKER_REGISTRY:-ubuntu-s2:5000/}${CONTAINER_OS:-alpine}/kafka/${KAFKA_VERSION:-2.2.0}:${CONTAINER_TAG:-19b10b050ca37e03b38fefd85bdadbe80c1dac988c16214bb181f7899104c46f}
+        image: ${DOCKER_REGISTRY:-ubuntu-s2:5000/}${CONTAINER_OS:-alpine}/confluent/${CONFLUENT_VERSION:-5.2.1}:${CONTAINER_TAG:-latest}
         logging:
             driver: json-file
             options:
@@ -39,16 +42,25 @@ services:
             - ./kafka-broker/logs:/usr/local/kafka/logs
             - ./kafka-broker/log:/var/log
 
+
     zookeeper:
-        command: kafka zookeeper
+#        command: kafka zookeeper
+        command: confluent zookeeper
         container_name: zookeeper
         environment:
             DEBUG_TRACE: ${DEBUG_TRACE:-0}
-            ZOOKEEPER_MY_ID: ${KAFKA_ID:?}
+            KAFKA_BOOTSTRAP_SERVERS: $KAFKA_BOOTSTRAP_SERVERS
+#            ZOOKEEPER_CONF_DIR: /usr/local/kafka/conf
+#            ZOOKEEPER_DATA_DIR: /usr/local/kafka/data
+#            ZOOKEEPER_HOME_DIR: /usr/local/kafka
+#            ZOOKEEPER_LOG_DIR: /usr/local/kafka/logs
+            ZOOKEEPER_MY_ID: 9999
             ZOOKEEPER_PORT: 2181
             ZOOKEEPER_TICK_TIME: 2000
             ZOOKEEPER_INIT_LIMIT: 10
             ZOOKEEPER_SYNC_LIMIT: 5
+            ZOOKEEPER_USER_NAME: zookeeper
+#            ZOOKEEPER_USER_DIR: /usr/local/kafka
         extra_hosts:
             - "ubuntu-s1:10.1.3.11"
             - "ubuntu-s2:10.1.3.12"
@@ -56,7 +68,8 @@ services:
             - "ubuntu-s4:10.1.3.10"
             - "ubuntu-s5:10.1.3.14"
         hostname: zookeeper
-        image: ${DOCKER_REGISTRY:-ubuntu-s2:5000/}${CONTAINER_OS:-alpine}/kafka/${KAFKA_VERSION:-2.2.0}:${CONTAINER_TAG:-e2b6659a704d81d2974b0a6b16f53529fcd12311425904f5f80c64cda8f763de}
+#        image: ${DOCKER_REGISTRY:-ubuntu-s2:5000/}${CONTAINER_OS:-alpine}/kafka/${KAFKA_VERSION:-2.2.0}:${CONTAINER_TAG:-19b10b050ca37e03b38fefd85bdadbe80c1dac988c16214bb181f7899104c46f}
+        image: ${DOCKER_REGISTRY:-ubuntu-s2:5000/}${CONTAINER_OS:-alpine}/confluent/${CONFLUENT_VERSION:-5.2.1}:${CONTAINER_TAG:-latest}
         logging:
             driver: json-file
             options:
@@ -69,3 +82,4 @@ services:
             - ./kafka-zookeeper/data:/usr/local/kafka/data
             - ./kafka-zookeeper/logs:/usr/local/kafka/logs 
             - ./kafka-zookeeper/log:/var/log
+
