@@ -1,3 +1,3 @@
 REPO=https://github.com/ballab1/versions
 DIR=${WORKSPACE_DIR}/versions
-COMMIT=811405fd98e4d29612145b50d7b97010309c4e8e
+COMMIT=e6c22bace072d3ff551d389d70a45460f70f2b0e
