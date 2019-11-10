@@ -9,11 +9,14 @@ services:
             - zookeeper
         environment:
             DEBUG_TRACE: ${DEBUG_TRACE:-0}
+            JMX_PORT: 1099
             KAFKA_ADVERTISED_HOST_NAME: ${HOST_IP:?}
             KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://${HOST_IP:?}:9092
             KAFKA_BOOTSTRAP_SERVERS: $KAFKA_BOOTSTRAP_SERVERS
             KAFKA_BROKER_ID: ${KAFKA_ID:?}
             KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+            KAFKA_HEAP_OPTS: "-Xmx6G -Xms6G"
+            KAFKA_JMX_OPTS: "-Djava.rmi.server.hostname=${hostip} -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.rmi.port=1099 -Dcom.sun.management.jmxremote.port=1099 -Dcom.sun.management.jmxremote=true -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false"
             KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
             KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
             KAFKA_NUM_PARTITIONS: 1
@@ -37,6 +40,7 @@ services:
         networks:
             - kafka-net
         ports:
+            - "1099:1099"
             - "9092:9092"
         restart: unless-stopped
         volumes:
@@ -51,7 +55,9 @@ services:
         container_name: zookeeper
         environment:
             DEBUG_TRACE: ${DEBUG_TRACE:-0}
+            JMX_PORT: 1299
             KAFKA_BOOTSTRAP_SERVERS: $KAFKA_BOOTSTRAP_SERVERS
+            KAFKA_JMX_OPTS: "-Djava.rmi.server.hostname=${hostip} -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.rmi.port=1299 -Dcom.sun.management.jmxremote.port=1099 -Dcom.sun.management.jmxremote=true -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false"
 #            ZOOKEEPER_CONF_DIR: /usr/local/kafka/conf
 #            ZOOKEEPER_DATA_DIR: /usr/local/kafka/data
 #            ZOOKEEPER_HOME_DIR: /usr/local/kafka
@@ -80,6 +86,7 @@ services:
         networks:
             - kafka-net
         ports:
+            - "1299:1299"
             - "2181:2181"
         restart: unless-stopped
         volumes:
