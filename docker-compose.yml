@@ -27,7 +27,7 @@ services:
             - "ubuntu-s3:10.1.3.6"
             - "ubuntu-s4:10.1.3.10"
         hostname: broker
-        image: ${DOCKER_REGISTRY:-ubuntu-s2:5000/}${CONTAINER_OS:-alpine}/confluent/${CONFLUENT_VERSION:-5.3.1}:${CONTAINER_TAG:-3ac61ab47e5feb36d4c9ba95946543935a8214a329f3a58e097e7b42ac6883de}
+        image: ${DOCKER_REGISTRY:-ubuntu-s2:5000/}${CONTAINER_OS:-alpine}/confluent/${CONFLUENT_VERSION:-5.3.1}:${CONTAINER_TAG:-41c4c779c3f6c5872d29059f0743d55a862b678e1c103e7399404be582baa300}
         logging:
             driver: json-file
             options:
@@ -73,7 +73,7 @@ services:
             - "ubuntu-s4:10.1.3.10"
             - "ubuntu-s5:10.1.3.14"
         hostname: zookeeper
-        image: ${DOCKER_REGISTRY:-ubuntu-s2:5000/}${CONTAINER_OS:-alpine}/confluent/${CONFLUENT_VERSION:-5.3.1}:${CONTAINER_TAG:-3ac61ab47e5feb36d4c9ba95946543935a8214a329f3a58e097e7b42ac6883de}
+        image: ${DOCKER_REGISTRY:-ubuntu-s2:5000/}${CONTAINER_OS:-alpine}/confluent/${CONFLUENT_VERSION:-5.3.1}:${CONTAINER_TAG:-41c4c779c3f6c5872d29059f0743d55a862b678e1c103e7399404be582baa300}
         logging:
             driver: json-file
             options:
