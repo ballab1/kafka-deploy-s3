@@ -6,6 +6,9 @@ services:
         container_name: broker
         depends_on:
             - zookeeper
+        dns: 10.1.3.1
+        dns_search: home
+        domainname: home
         environment:
             DEBUG_TRACE: ${DEBUG_TRACE:-0}
             JMX_PORT: 1099
@@ -21,12 +24,7 @@ services:
             KAFKA_NUM_PARTITIONS: 1
             KAFKA_ZOOKEEPER_CONNECT: $ZOOKEEPER_HOSTS
             ZOOKEEPER_TIMEOUT: 6000
-        extra_hosts:
-            - "ubuntu-s1:10.1.3.11"
-            - "ubuntu-s2:10.1.3.12"
-            - "ubuntu-s3:10.1.3.6"
-            - "ubuntu-s4:10.1.3.10"
-        hostname: broker
+        hostname: broker.s3
         image: ${DOCKER_REGISTRY:-ubuntu-s2:5000/}${CONTAINER_OS:-alpine}/confluent/${CONFLUENT_VERSION:-5.3.2}:${CONTAINER_TAG:-85e257c2f76aeabc22e0aa0e64502e029bb15ae7e269cdf4043896b63966ee25}
         logging:
             driver: json-file
@@ -50,6 +48,9 @@ services:
     zookeeper:
         command: confluent zookeeper
         container_name: zookeeper
+        dns: 10.1.3.1
+        dns_search: home
+        domainname: home
         environment:
             DEBUG_TRACE: ${DEBUG_TRACE:-0}
             JMX_PORT: 1299
@@ -66,13 +67,7 @@ services:
             ZOOKEEPER_SYNC_LIMIT: 5
             ZOOKEEPER_USER_NAME: zookeeper
 #            ZOOKEEPER_USER_DIR: /usr/local/kafka
-        extra_hosts:
-            - "ubuntu-s1:10.1.3.11"
-            - "ubuntu-s2:10.1.3.12"
-            - "ubuntu-s3:10.1.3.6"
-            - "ubuntu-s4:10.1.3.10"
-            - "ubuntu-s5:10.1.3.14"
-        hostname: zookeeper
+        hostname: zookeeper.s3
         image: ${DOCKER_REGISTRY:-ubuntu-s2:5000/}${CONTAINER_OS:-alpine}/confluent/${CONFLUENT_VERSION:-5.3.2}:${CONTAINER_TAG:-85e257c2f76aeabc22e0aa0e64502e029bb15ae7e269cdf4043896b63966ee25}
         logging:
             driver: json-file
