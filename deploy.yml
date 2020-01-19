@@ -4,7 +4,8 @@ completion_msg:
 container_os: alpine
 
 environment:
-    KAFKA_BOOTSTRAP_SERVERS: '10.1.3.6:9092,10.1.3.11:9092,10.1.3.10:9092'
+    __SECRETS_FILE: ~/.inf/secret.properties
+    KAFKA_BOOTSTRAP_SERVERS: 's3.ubuntu.home:9092,s4.ubuntu.home:9092'
     KAFKA_ID: 3
     LOCATION: home 
 
@@ -22,4 +23,5 @@ skip_wait:
 versions:
     repo: https://github.com/ballab1/versions
     dir: ${WORKSPACE_DIR}/.versions
-    commit: 589bd45dce67db2e0d62cca31e9ec12acb4093bf
+    commit: 5e66285b9b0938a0a1e2b9899970e5d5b28b4f55
+    branch: master
