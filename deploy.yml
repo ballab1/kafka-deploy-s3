@@ -4,24 +4,22 @@ completion_msg:
 container_os: alpine
 
 environment:
-    __SECRETS_FILE: ~/.inf/secret.properties
-    KAFKA_BOOTSTRAP_SERVERS: 's3.ubuntu.home:9092,s4.ubuntu.home:9092'
     KAFKA_ID: 3
     LOCATION: home 
+    KAFKA_BOOTSTRAP_SERVERS: 's3.ubuntu.home:9092,s4.ubuntu.home:9092'
+    ZOOKEEPER_HOSTS: ${HOST_IP:?}:2181 
+    __SECRETS_FILE: ~/.inf/secret.properties
 
-skip_wait:
-    - blue
-    - grafana
-    - jbe
-    - jfk
-    - jira
-    - mysql
-    - pgadmin4
-    - supervisorm
-    - registry
+#skip_wait:
+#    - blue
+
+thirdparty_versions:
+    KAFDROP_VERSION: 3.22.0             # https://hub.docker.com/r/obsidiandynamics/kafdrop
+#    KAFKAHQ_VERSION: 0.11.0             # https://hub.docker.com/r/tchiotludo/kafkahq
+    ZOONAVIGATOR_VERSION: 0.7.1         # https://hub.docker.com/r/elkozmon/zoonavigator
 
 versions:
     repo: https://github.com/ballab1/versions
     dir: ${WORKSPACE_DIR}/.versions
-    commit: 5e66285b9b0938a0a1e2b9899970e5d5b28b4f55
+    commit: 121035089ca1740bb5ee170fd88d56cabe48e28a
     branch: master

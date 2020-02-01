@@ -7,8 +7,9 @@ services:
         depends_on:
             - zookeeper
         dns: 10.1.3.1
-        dns_search: home
-        domainname: home
+        dns_search:
+            - ubuntu.home
+            - home
         environment:
             DEBUG_TRACE: ${DEBUG_TRACE:-0}
             KAFKA_ADVERTISED_HOST_NAME: ${HOST_IP:?}
@@ -33,8 +34,8 @@ services:
             KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
             KAFKA_ZOOKEEPER_CONNECT: ${ZOOKEEPER_HOSTS:?}
             ZOOKEEPER_TIMEOUT: 6000
-        hostname: broker.s3
-        image: ${DOCKER_REGISTRY:-ubuntu-s2.home:5000/}${CONTAINER_OS:-alpine}/confluent/${CONFLUENT_VERSION:-5.4.0}:${CONTAINER_TAG:-4e4975d6749dc05b20930effb75421c23f3fad0940c206bf1cc2083dc9605bee}
+        hostname: broker.s3.home
+        image: ${DOCKER_REGISTRY:-ubuntu-s2.home:5000/}${CONTAINER_OS:-alpine}/confluent/${CONFLUENT_VERSION:-5.4.0}:${CONTAINER_TAG:-d3dbbc5e8d837650f066d39665e829893ab3b0004a703f51150ed21a44be329a}
         logging:
             driver: json-file
             options:
@@ -49,34 +50,55 @@ services:
             - "9092:9092"
         restart: unless-stopped
         volumes:
-            - ./kafka-broker/data:/usr/local/kafka/data
-            - ./kafka-broker/logs:/usr/local/kafka/logs
-            - ./kafka-broker/log:/var/log
+            - ./broker/data:/usr/local/kafka/data
+            - ./broker/logs:/usr/local/kafka/logs
+            - ./broker/log:/var/log
 
+#
+# docker.io/obsidiandynamics/kafdrop
+#
+    kafdrop:
+        container_name: kafdrop
+        dns: 10.1.3.1
+        dns_search:
+            - ubuntu.home
+            - home
+        environment:
+            JVM_OPTS: "-Xms32M -Xmx64M"
+#            JMX_PORT:
+            KAFKA_BROKERCONNECT: $KAFKA_BOOTSTRAP_SERVERS
+#            KAFKA_PROPERTIES: $(cat kafka.properties | base64)
+#            KAFKA_TRUSTSTORE: $(cat kafka.truststore.jks | base64)  # optional
+#            KAFKA_KEYSTORE: $(cat kafka.keystore.jks | base64)      # optional
+        hostname: kafdrop
+        image: ${DOCKER_REGISTRY:-ubuntu-s2.home:5000/}thirdparty/kafdrop:${KAFDROP_VERSION:-3.22.0}
+        logging:
+            driver: json-file
+            options:
+                max-file: "3"
+                max-size: "10m" 
+        networks:
+            - kafka-net
+        ports:
+            - "8998:9000"
+        restart: unless-stopped
 
     zookeeper:
         command: confluent zookeeper
         container_name: zookeeper
         dns: 10.1.3.1
-        dns_search: home
-        domainname: home
+        dns_search:
+            - ubuntu.home
+            - home
         environment:
             DEBUG_TRACE: ${DEBUG_TRACE:-0}
-            KAFKA_BOOTSTRAP_SERVERS: $KAFKA_BOOTSTRAP_SERVERS
-            KAFKA_JMX_OPTS: "-Djava.rmi.server.hostname=${HOST_IP} -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.rmi.port=1299 -Dcom.sun.management.jmxremote.port=1099 -Dcom.sun.management.jmxremote=true -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false"
-#            ZOOKEEPER_CONF_DIR: /usr/local/kafka/conf
-#            ZOOKEEPER_DATA_DIR: /usr/local/kafka/data
-#            ZOOKEEPER_HOME_DIR: /usr/local/kafka
-#            ZOOKEEPER_LOG_DIR: /usr/local/kafka/logs
-            ZOOKEEPER_MY_ID: 9999
+            ZOOKEEPER_MY_ID: ${KAFKA_ID:?}
             ZOOKEEPER_PORT: 2181
             ZOOKEEPER_TICK_TIME: 2000
             ZOOKEEPER_INIT_LIMIT: 10
             ZOOKEEPER_SYNC_LIMIT: 5
-            ZOOKEEPER_USER_NAME: zookeeper
-#            ZOOKEEPER_USER_DIR: /usr/local/kafka
-        hostname: zookeeper.s3
-        image: ${DOCKER_REGISTRY:-ubuntu-s2.home:5000/}${CONTAINER_OS:-alpine}/confluent/${CONFLUENT_VERSION:-5.4.0}:${CONTAINER_TAG:-4e4975d6749dc05b20930effb75421c23f3fad0940c206bf1cc2083dc9605bee}
+        hostname: zookeeper.s3.home
+        image: ${DOCKER_REGISTRY:-ubuntu-s2.home:5000/}${CONTAINER_OS:-alpine}/confluent/${CONFLUENT_VERSION:-5.4.0}:${CONTAINER_TAG:-d3dbbc5e8d837650f066d39665e829893ab3b0004a703f51150ed21a44be329a}
         logging:
             driver: json-file
             options:
@@ -88,12 +110,37 @@ services:
             - "2181:2181"
         restart: unless-stopped
         volumes:
-            - ./kafka-zookeeper/data:/usr/local/kafka/data
-            - ./kafka-zookeeper/logs:/usr/local/kafka/logs 
-            - ./kafka-zookeeper/log:/var/log
+            - ./zookeeper/data:/usr/local/kafka/data
+            - ./zookeeper/logs:/usr/local/kafka/logs 
+            - ./zookeeper/log:/var/log
 
+
+#
+# docker.io/elkozmon/zoonavigator
+#
+    zoonavigator:
+        container_name: zoonavigator
+        dns: 10.1.3.1
+        dns_search:
+            - ubuntu.home
+            - home
+        environment:
+            DEBUG_TRACE: ${DEBUG_TRACE:-0}
+            HTTP_PORT: 9000
+        hostname: zoonavigator.s4.home
+        image: ${DOCKER_REGISTRY:-ubuntu-s2.home:5000/}thirdparty/zoonavigator:${ZOONAVIGATOR_VERSION:-0.7.1}
+        logging:
+            driver: json-file
+            options:
+                max-size: "10m"
+                max-file: "3"
+#        network_mode: "host"
         networks:
             - kafka-net
+        ports:
+            - "8999:9000"
+        restart: unless-stopped
+
 
 networks:
     kafka-net:
