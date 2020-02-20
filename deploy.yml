@@ -4,7 +4,7 @@ completion_msg:
 container_os: alpine
 
 environment:
-    KAFKA_ID: 3
+    KAFKA_ID: 1
     LOCATION: home 
     KAFKA_BOOTSTRAP_SERVERS: 's3.ubuntu.home:9092,s4.ubuntu.home:9092'
     ZOOKEEPER_HOSTS: ${HOST_IP:?}:2181 
@@ -14,12 +14,12 @@ environment:
 #    - blue
 
 thirdparty_versions:
-    KAFDROP_VERSION: 3.22.0             # https://hub.docker.com/r/obsidiandynamics/kafdrop
+    KAFDROP_VERSION: 3.23.0             # https://hub.docker.com/r/obsidiandynamics/kafdrop
 #    KAFKAHQ_VERSION: 0.11.0             # https://hub.docker.com/r/tchiotludo/kafkahq
     ZOONAVIGATOR_VERSION: 0.7.1         # https://hub.docker.com/r/elkozmon/zoonavigator
 
 versions:
     repo: https://github.com/ballab1/versions
     dir: ${WORKSPACE_DIR}/.versions
-    commit: 121035089ca1740bb5ee170fd88d56cabe48e28a
+    commit: 2c3dd4d9684c54a27608e35f27723efbdc7b45b3
     branch: master
