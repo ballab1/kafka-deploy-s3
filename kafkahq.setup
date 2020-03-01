@@ -26,7 +26,3 @@ if deploy.isValidService 'nginx' && [ -d "${config_dir}/nginx.conf" ]; then
     sudo cp -ru "${config_dir}/nginx.conf"/* "${WORKSPACE_DIR}/nginx/conf.d/"
     [ -d "${workspace_dir}/nginx.conf" ] && sudo rm -rf "${workspace_dir}/nginx.conf"
 fi
-
-sudo rm -rf "${workspace_dir}/app"
-cp -r "${config_dir}/app" "${workspace_dir}"
-sudo chown -R 1000:1004 "${workspace_dir}/app"
