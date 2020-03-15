@@ -35,7 +35,7 @@ services:
             KAFKA_ZOOKEEPER_CONNECT: ${ZOOKEEPER_HOSTS:?}
             ZOOKEEPER_TIMEOUT: 6000
         hostname: broker.s3.home
-        image: ${DOCKER_REGISTRY:-ubuntu-s2.home:5000/}${CONTAINER_OS:-alpine}/confluent/${CONFLUENT_VERSION:-5.4.1}:${CONTAINER_TAG:-9ece020d45aeb95ed033e7705f0c3841a177dbb0920348877004218a4bbea50c}
+        image: ${DOCKER_REGISTRY:-ubuntu-s2.home:5000/}${CONTAINER_OS:-alpine}/confluent/${CONFLUENT_VERSION:-5.4.1}:${CONTAINER_TAG:-3743c749e73ca65c6f2d94597f5954a592e489b025a49331ea7853dd1671ce57}
         logging:
             driver: json-file
             options:
@@ -54,35 +54,6 @@ services:
             - ./broker/logs:/usr/local/confluent/logs
             - ./broker/log:/var/log
 
-# https://hub.docker.com/r/tchiotludo/kafkahq
-# https://github.com/tchiotludo/kafkahq
-    kafkahq:
-        container_name: kafkahq
-        dns: 10.1.3.1
-        dns_search:
-            - ubuntu.home
-            - home
-        environment:
-            KAFKAHQ_CONFIGURATION: |
-                kafkahq:
-                    connections:
-                        docker-kafka-server:
-                            properties:
-                                bootstrap.servers: "s3.ubuntu.home:9092,s4.ubuntu.home:9092"
-        hostname: kafkahq.s4.home
-        image: ${DOCKER_REGISTRY:-ubuntu-s2.home:5000/}thirdparty/kafkahq:${KAFKAHQ_VERSION:-0.12.0}
-        logging:
-            driver: json-file
-            options:
-                max-file: "3"
-                max-size: "10m" 
-        networks:
-            - kafka-net
-        ports:
-            - "8997:8080"
-        volumes:
-            - ./kafkahq/log:/var/log
-
 
     zookeeper:
         command: confluent zookeeper
@@ -98,13 +69,11 @@ services:
             ZOOKEEPER_TICKTIME: 2000
             ZOOKEEPER_INITLIMIT: 10
             ZOOKEEPER_SYNCLIMIT: 5
-#            ZOOKEEPER_SERVERS: 0.0.0.0:2888:3888,10.1.3.10:2888:3888,10.1.3.14:2888:3888
             ZOOKEEPER_SERVER.1: 0.0.0.0:2888:3888
-#            ZOOKEEPER_SERVER.1: localhost:2888:3888
             ZOOKEEPER_SERVER.2: 10.1.3.10:2888:3888
-            ZOOKEEPER_SERVER.3: 10.1.3.14:2888:3888
+            ZOOKEEPER_SERVER.3: 10.1.3.17:2888:3888
         hostname: zookeeper.s3.home
-        image: ${DOCKER_REGISTRY:-ubuntu-s2.home:5000/}${CONTAINER_OS:-alpine}/confluent/${CONFLUENT_VERSION:-5.4.1}:${CONTAINER_TAG:-9ece020d45aeb95ed033e7705f0c3841a177dbb0920348877004218a4bbea50c}
+        image: ${DOCKER_REGISTRY:-ubuntu-s2.home:5000/}${CONTAINER_OS:-alpine}/confluent/${CONFLUENT_VERSION:-5.4.1}:${CONTAINER_TAG:-3743c749e73ca65c6f2d94597f5954a592e489b025a49331ea7853dd1671ce57}
         logging:
             driver: json-file
             options:
@@ -121,42 +90,6 @@ services:
             - ./zookeeper/data:/usr/local/confluent/data
             - ./zookeeper/logs:/usr/local/confluent/logs 
             - ./zookeeper/log:/var/log
-
-
-#
-# docker.io/elkozmon/zoonavigator
-#
-    zoonavigator:
-        container_name: zoonavigator
-        dns: 10.1.3.1
-        dns_search:
-            - ubuntu.home
-            - home
-        environment:
-            DEBUG_TRACE: ${DEBUG_TRACE:-0}
-            HTTP_PORT: 9000
-        hostname: zoonavigator.s4.home
-        image: ${DOCKER_REGISTRY:-ubuntu-s2.home:5000/}thirdparty/zoonavigator:${ZOONAVIGATOR_VERSION:-0.8.0}
-        logging:
-            driver: json-file
-            options:
-                max-file: "3"
-                max-size: "10m"
-        networks:
-            - kafka-net
-        ports:
-            - "8999:9000"
-        restart: unless-stopped
-        volumes:
-            - ./zoonavigator/log:/var/log
-
-
 networks:
     kafka-net:
         name: kafka-container-net
-
-secrets:
-   kafka.secret:
-     file: .secrets/secrets/kafkamgr.secret
-   kafka_manager.pwd:
-     file: .secrets/secrets/bobb.pwd 
