@@ -24,7 +24,7 @@ if [ ! -f "$isIinitialized" ]; then
     SECURITY_DIR="${workspace_dir}/secrets"
     mkdir -p $SECURITY_DIR
     (cd $SECURITY_DIR && echo rm -f *.crt *.csr *_creds *.jks *.srl *.key *.pem *.der *.p12)
-    (cd $SECURITY_DIR && $CONFIG_DIR/certs-create-per-user.sh kafkaLagExporter)
+    (cd $SECURITY_DIR && ${CONFIG_DIR}/kafka/certs-create-per-user.sh kafkaLagExporter)
 
     touch "$isIinitialized"
 fi
