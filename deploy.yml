@@ -4,14 +4,17 @@ completion_msg:
 container_os: alpine
 
 environment:
-    COMPOSE_HTTP_TIMEOUT: 120
+    BROKER_JMX_PORT: 7201
     CFG_USER_SECRETS: ~/.inf
-    JMX_PORT: 7203
-    KAFKA_ID: 1
-    KAFKAMGR_UID: 1000
+    COMPOSE_HTTP_TIMEOUT: 120
+    CONFLUENT_DOCKER_TAG: "7.0.1"
+    KAFKAMGR_UID: 1026
     KAFKA_BOOTSTRAP_SERVERS: s3.ubuntu.home:9092,s4.ubuntu.home:9092,s8.ubuntu.home:9092
+    KAFKA_CLUSTER_ID: 1
+    KAFKA_LAG_EXPORTER: "User:kafkaLagExporter"
     LOCATION: home 
     ZOOKEEPER_HOSTS: s3.ubuntu.home:2181,s4.ubuntu.home:2181,s8.ubuntu.home:2181 
+    ZOOKEEPER_JMX_PORT: 7200
     __SECRETS_FILE: ~/.inf/secret.properties
 
 #skip_wait:
@@ -20,11 +23,12 @@ environment:
 thirdparty_versions:
     AKHQ_VERSION: 0.14.1                # https://hub.docker.com/r/tchiotludo/akhq/tags
     KAFDROP_VERSION: 3.27.0             # https://hub.docker.com/r/obsidiandynamics/kafdrop/tags
+    KAFKA_LAG_EXPORTER_TAG: 0.6.7
     ZOONAVIGATOR_VERSION: 1.0.1         # https://hub.docker.com/r/elkozmon/zoonavigator/tags
 
 versions:
     repo: https://github.com/ballab1/versions
-    dir: ${WORKSPACE_DIR}/.versions
+    dir: "${WORKSPACE_DIR}/.versions"
     commit: 01c9c3cf176e07ede578a74399d22ee7c3fe5f37
     branch: dev
 
