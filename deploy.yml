@@ -29,7 +29,7 @@ thirdparty_versions:
 versions:
     repo: https://github.com/ballab1/versions
     dir: "${WORKSPACE_DIR}/.versions"
-    commit: 8d29b7a388acd8f2998263f85e1d28ca792d5d01
+    commit: 3993e51ec4c2c4a15b9740559284c0a62ef66227
     branch: master
 
 default_args:
