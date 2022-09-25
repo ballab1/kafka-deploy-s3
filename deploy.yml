@@ -8,7 +8,7 @@ environment:
     BROKER_EXPORT: 7204
     CFG_USER_SECRETS: ~/.inf
     COMPOSE_HTTP_TIMEOUT: 120
-    CONFLUENT_DOCKER_TAG: "7.0.1"
+    CONFLUENT_DOCKER_TAG: "7.2.1"
     KAFKAMGR_UID: 1026
     KAFKA_BOOTSTRAP_SERVERS: s3.ubuntu.home:9092,s7.ubuntu.home:9092,s8.ubuntu.home:9092
     KAFKA_CLUSTER_ID: 1
@@ -29,7 +29,7 @@ thirdparty_versions:
 versions:
     repo: https://github.com/ballab1/versions
     dir: "${WORKSPACE_DIR}/.versions"
-    commit: dd755244b93bd955230eaa0f4254149719b57e5f
+    commit: c00b780c1eff69b83de6bcee8d77b7f3a8d1fb6b
     branch: master
 
 default_args:
