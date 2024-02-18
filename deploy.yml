@@ -14,8 +14,8 @@ environment:
     KAFKA_CLUSTER_ID: 1
     KAFKA_LAG_EXPORTER: "User:kafkaLagExporter"
     KAFKA_LAG_PORT: 9999
-    LOCATION: home 
-    ZOOKEEPER_HOSTS: s3.ubuntu.home:2181,s7.ubuntu.home:2181,s8.ubuntu.home:2181 
+    LOCATION: home
+    ZOOKEEPER_HOSTS: s3.ubuntu.home:2181,s7.ubuntu.home:2181,s8.ubuntu.home:2181
     ZOOKEEPER_JMX_PORT: 7200
     ZOOKEEPER_EXPORT: 7202
     __SECRETS_FILE: ~/.inf/secret.properties
